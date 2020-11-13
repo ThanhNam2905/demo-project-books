@@ -33,7 +33,7 @@ class FormAdd extends Component {
         var name = event.target.name;
         var value = event.target.value;
         if(name === "trangThaiSach") {
-            value = event.target.value === "Full" ? 0 : 1;
+            value = event.target.value === 0 ? "Full" : "Sold out";
         }
         this.setState({
             [name]: value
