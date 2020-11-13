@@ -36,3 +36,40 @@
     transform: rotate(360deg);
   }
 }
+
+/* ------------ Style CSS ------------------- */
+
+.btn-custom {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+span.fa {
+  margin-right: 5px;
+}
+span.fa-caret-square-o-down {
+  margin-left: 5px;
+}
+.panel-body {
+  text-align: left;
+}
+span.fa.fa-times-circle.text-right {
+  float: right;
+  margin-top: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+span.fa.fa-times-circle.text-right:hover { color: orange; transform: scale(1.8); }
+h3.panel-title {
+  display: inline-block;
+}
+span.label.label-success, span.label.label-danger { cursor: pointer; }
+
+
+.sort-selected::after {
+  content: '\f00c';
+  font-family: 'FontAwesome';
+  font-weight: normal;
+  margin: 0px 0px 0px 10px;
+  display: inline-block;
+}
