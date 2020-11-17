@@ -16,7 +16,7 @@ class BookItem extends Component {
     }
     // Chuc nang Update Book
     onUpdateBook = () => {
-        this.props.onUpdateBook(this.props.book.id);
+        this.props.onUpdateBook(this.props.book.id, this.props.book.trangThaiSach);
     }
 
     render() {
@@ -29,9 +29,9 @@ class BookItem extends Component {
                 <td>{book.maSach}</td>
                 <td>{moment(book.ngayXB).format('DD/MM/YYYY')}</td>
                 <td className="text-center">
-                    <span   className={book.trangThaiSach === STATUS.full ? "label label-success" : "label label-danger"}
+                    <span   className={book.trangThaiSach == STATUS.full ? "label label-success" : "label label-danger"}
                             onClick={this.onUpdateStatusBook}>
-                            { book.trangThaiSach === STATUS.full   ? "Full" : "Sold out" }
+                            { book.trangThaiSach == STATUS.full   ? "Full" : "Sold out" }
                     </span>
                 </td>
                 <td className="text-center">

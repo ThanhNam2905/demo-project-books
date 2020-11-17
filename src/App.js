@@ -135,7 +135,7 @@ class App extends Component {
     })
   }
   // Chuc nang Update Book
-  onUpdateBook = (idUpdateBook) => {
+  onUpdateBook = (idUpdateBook, statusBook) => {
     // console.log(idUpdateBook);
     var { books } = this.state;
     var indexFind = this.findIndex(idUpdateBook);
@@ -144,7 +144,7 @@ class App extends Component {
     this.setState({
       bookEdit: bookEdit
     })
-    // console.log(bookEdit);
+    console.log(bookEdit.trangThaiSach, 'abc');
     this.isShowFormEditBook();
   }
   // Chuc nang loc du lieu trên Table
