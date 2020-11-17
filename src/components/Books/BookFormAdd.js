@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-const moment = require('moment');
+import moment from 'moment'
 
 class FormAdd extends Component {
 
@@ -10,7 +10,7 @@ class FormAdd extends Component {
             maSach: '',
             tenSach: '',
             tenTG: '',
-            ngayXB: '',
+            ngayXB: moment().format('YYYY-MM-DD'),
             trangThaiSach: 0
         }
     }
@@ -32,12 +32,10 @@ class FormAdd extends Component {
     handleChangeFormAdd = (event) => {
         var name = event.target.name;
         var value = event.target.value;
-        if(name === "trangThaiSach") {
-            value = event.target.value === 0 ? "Full" : "Sold out";
-        }
         this.setState({
             [name]: value
         })
+        
     }
     // OnClick btn Huy Bo thi remove Data vua nhap
     onClearDataForm = () => {
@@ -58,7 +56,7 @@ class FormAdd extends Component {
                 maSach: this.props.book.maSach,
                 tenSach: this.props.book.tenSach,
                 tenTG: this.props.book.tenTG,
-                ngayXB: moment(this.props.book.ngayXB, 'DD/MM/YYYY'),
+                ngayXB: moment(this.props.ngayXB).format('YYYY-MM-DD'),
                 trangThaiSach: this.props.book.trangThaiSach
             })
         }
@@ -71,7 +69,7 @@ class FormAdd extends Component {
                 maSach: nextProps.book.maSach,
                 tenSach: nextProps.book.tenSach,
                 tenTG: nextProps.book.tenTG,
-                ngayXB: moment(nextProps.book.ngayXB, 'DD/MM/YYYY'),
+                ngayXB: moment(this.props.ngayXB).format('YYYY-MM-DD'),
                 trangThaiSach: nextProps.book.trangThaiSach
             })
         }
@@ -82,18 +80,15 @@ class FormAdd extends Component {
                 maSach: '',
                 tenSach: '',
                 tenTG: '',
-                ngayXB: '',
+                ngayXB: moment().format('YYYY-MM-DD'),
                 trangThaiSach: 0
             })
         }
     }
     
-    
-
     render() {
         var { id } = this.state;
-        
-        
+
         return (
                 <div className="panel panel-warning">
                     <div className="panel-heading">
@@ -136,9 +131,8 @@ class FormAdd extends Component {
                                 <input  type="date" 
                                         className="form-control" 
                                         name="ngayXB"
-                                        value={moment(this.state.ngayXB).format('DD/MM/YYYY')}
+                                        value={this.state.ngayXB}
                                         onChange={this.handleChangeFormAdd}
-                                        
                                         />
                             </div>
                             <label>Trạng Thái Sách:</label>

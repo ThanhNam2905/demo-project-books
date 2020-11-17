@@ -28,10 +28,11 @@ class App extends Component {
   }
 
   // ComponentDidMount duoc goi khi F5 lai trang chi chay duy nhat 1 lan 
-  componentDidMount = () => {
+  componentDidMount = async() => {
     // kiem tra localStorage có khác null hay ko nếu ko thì setState
+    // console.log(" localStorage.getItem('books')", localStorage.getItem('books'))
     if(localStorage && localStorage.getItem('books')) {
-      this.setState({
+      await this.setState({
         books: JSON.parse(localStorage.getItem('books'))
       })
     }
@@ -62,7 +63,6 @@ class App extends Component {
   // onSubmitForm 
   onSubmitForm = (data) => { 
     // console.log(data); 
-    // data === this.state cua Component FormAdd duoc gui thong qua this.props.onSubmitForm
     var { books } = this.state;
     // Phan biet giua Add va Edit Book bang data.id
     // Neu data.id === '' => Add, ngc lai => Edit
@@ -77,6 +77,7 @@ class App extends Component {
       books: books,
       bookEdit: null
     })
+    // localStorage.setIt em('books', books);
     localStorage.setItem('books', JSON.stringify(books));
   }
   // Chuc nang Update Status Sach
@@ -143,6 +144,7 @@ class App extends Component {
     this.setState({
       bookEdit: bookEdit
     })
+    // console.log(bookEdit);
     this.isShowFormEditBook();
   }
   // Chuc nang loc du lieu trên Table
@@ -224,7 +226,7 @@ class App extends Component {
         else return 0;
       });
     }
-      
+    
     return (
       <div className="App">
         <div className="container">
@@ -248,7 +250,6 @@ class App extends Component {
               <BookControl onHandleSearch={ this.onHandleSearch}
                            onSortBy={this.onSortBy}
               />
-
               <div className="row mt-15">
               {/* Conponent BookList */}
                 <BookList  books={books}

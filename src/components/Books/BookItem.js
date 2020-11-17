@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 const moment = require('moment');
-
+const STATUS = {
+   full :   0,
+   soldout: 1
+}
 class BookItem extends Component {
     
     onUpdateStatusBook = () => {
@@ -26,9 +29,9 @@ class BookItem extends Component {
                 <td>{book.maSach}</td>
                 <td>{moment(book.ngayXB).format('DD/MM/YYYY')}</td>
                 <td className="text-center">
-                    <span   className={book.trangThaiSach === 0 ? "label label-success" : "label label-danger"}
+                    <span   className={book.trangThaiSach === STATUS.full ? "label label-success" : "label label-danger"}
                             onClick={this.onUpdateStatusBook}>
-                            { book.trangThaiSach === 0 ? "Full" : "Sold out" }
+                            { book.trangThaiSach === STATUS.full   ? "Full" : "Sold out" }
                     </span>
                 </td>
                 <td className="text-center">
