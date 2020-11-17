@@ -135,7 +135,7 @@ class App extends Component {
     })
   }
   // Chuc nang Update Book
-  onUpdateBook = (idUpdateBook, statusBook) => {
+  onUpdateBook = (idUpdateBook) => {
     // console.log(idUpdateBook);
     var { books } = this.state;
     var indexFind = this.findIndex(idUpdateBook);
@@ -144,7 +144,6 @@ class App extends Component {
     this.setState({
       bookEdit: bookEdit
     })
-    console.log(bookEdit.trangThaiSach, 'abc');
     this.isShowFormEditBook();
   }
   // Chuc nang loc du lieu trên Table
@@ -193,9 +192,9 @@ class App extends Component {
       }
       // Filter bằng Status sách
       books = books.filter((book) => {
-          if(filter.status === -1) return book;
+          if(filter.status == -1) return book;
           else {
-            return book.trangThaiSach === (filter.status === 1 ? 1 : 0);
+            return book.trangThaiSach == (filter.status == 1 ? 1 : 0);
           }
         });
     }

@@ -16,7 +16,7 @@ class BookItem extends Component {
     }
     // Chuc nang Update Book
     onUpdateBook = () => {
-        this.props.onUpdateBook(this.props.book.id, this.props.book.trangThaiSach);
+        this.props.onUpdateBook(this.props.book.id);
     }
 
     render() {
