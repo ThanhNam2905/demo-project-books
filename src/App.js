@@ -11,7 +11,6 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state= {
-      books: [], // id, ms, tens, ngayxb, tentg, status
       isDisplayFormAdd : false,
       bookEdit: null,
       filter : {
@@ -27,16 +26,6 @@ class App extends Component {
     }
   }
 
-  // ComponentDidMount duoc goi khi F5 lai trang chi chay duy nhat 1 lan 
-  componentDidMount = async() => {
-    // kiem tra localStorage có khác null hay ko nếu ko thì setState
-    // console.log(" localStorage.getItem('books')", localStorage.getItem('books'))
-    if(localStorage && localStorage.getItem('books')) {
-      await this.setState({
-        books: JSON.parse(localStorage.getItem('books'))
-      })
-    }
-  }
   // onRemoveFormAdd
   onRemoveFormAdd = () => {
     this.setState({
@@ -174,57 +163,62 @@ class App extends Component {
    // -------- RENDER ---------------
   render() {
 
-    var { books, isDisplayFormAdd, bookEdit, filter, keywordSearch, sort } = this.state; // cach viet cua ECMA6: var books = this.state.books
+    var { 
+          isDisplayFormAdd, 
+          bookEdit, 
+          // filter, 
+          // keywordSearch, 
+          // sort 
+        } = this.state; // cach viet cua ECMA6: var books = this.state.books
     // console.log(filter); 
     // kiem tra filter co ton tai hay ko
-    if(filter) {
-      // Filter bằng Name
-      if(filter.name) {
-        books = books.filter((book) => {
-          return book.tenSach.toLowerCase().indexOf(filter.name) !== -1;
-        });
-      }
-      // Filter bằng Mã sách
-      if(filter.ma) {
-        books = books.filter((book) => {
-          return book.maSach.toLowerCase().indexOf(filter.ma) !== -1;
-        });
-      }
-      // Filter bằng Status sách
-      books = books.filter((book) => {
-          if(filter.status == -1) return book;
-          else {
-            return book.trangThaiSach == (filter.status == 1 ? 1 : 0);
-          }
-        });
-    }
+    // if(filter) {
+    //   // Filter bằng Name
+    //   if(filter.name) {
+    //     books = books.filter((book) => {
+    //       return book.tenSach.toLowerCase().indexOf(filter.name) !== -1;
+    //     });
+    //   }
+    //   // Filter bằng Mã sách
+    //   if(filter.ma) {
+    //     books = books.filter((book) => {
+    //       return book.maSach.toLowerCase().indexOf(filter.ma) !== -1;
+    //     });
+    //   }
+    //   // Filter bằng Status sách
+    //   books = books.filter((book) => {
+    //       if(filter.status == -1) return book;
+    //       else {
+    //         return book.trangThaiSach == (filter.status == 1 ? 1 : 0);
+    //       }
+    //   });
+    // }
     // Chuc nang Search trong Component Search
-    if(keywordSearch) {
-      books = books.filter((book) => {
-          return book.tenSach.toLowerCase().indexOf(keywordSearch) !== -1;
-      });
-    }
+    // if(keywordSearch) {
+    //   books = books.filter((book) => {
+    //       return book.tenSach.toLowerCase().indexOf(keywordSearch) !== -1;
+    //   });
+    // }
     // Component BookFormAdd
-    var showFormAdd = isDisplayFormAdd ? <BookFormAdd   onRemoveFormAdd={this.onRemoveFormAdd}
-                                                    onSubmitForm={this.onSubmitForm}
-                                                    book={bookEdit}
+    var showFormAdd = isDisplayFormAdd ? <BookFormAdd onRemoveFormAdd={this.onRemoveFormAdd}
+                                                      bookEdit={bookEdit}
                                           /> : '';
     // Chuc Nang Sap xep
-    if(sort.by === "name") {
-      // trường hợp sap xep theo tenSach
-      books.sort((a, b) => {
-        if(a.tenSach.toLowerCase() > b.tenSach.toLowerCase()) return sort.value;
-        else if(a.tenSach.toLowerCase() < b.tenSach.toLowerCase()) return -sort.value;
-        else return 0;
-      });
-    }else {
-      // trường hợp sap xep theo statusSach
-      books.sort((a, b) => {
-        if(a.trangThaiSach > b.trangThaiSach) return sort.value;
-        else if(a.trangThaiSach < b.trangThaiSach) return -sort.value;
-        else return 0;
-      });
-    }
+    // if(sort.by === "name") {
+    //   // trường hợp sap xep theo tenSach
+    //   books.sort((a, b) => {
+    //     if(a.tenSach.toLowerCase() > b.tenSach.toLowerCase()) return sort.value;
+    //     else if(a.tenSach.toLowerCase() < b.tenSach.toLowerCase()) return -sort.value;
+    //     else return 0;
+    //   });
+    // }else {
+    //   // trường hợp sap xep theo statusSach
+    //   books.sort((a, b) => {
+    //     if(a.trangThaiSach > b.trangThaiSach) return sort.value;
+    //     else if(a.trangThaiSach < b.trangThaiSach) return -sort.value;
+    //     else return 0;
+    //   });
+    // }
     
     return (
       <div className="App">
@@ -251,12 +245,13 @@ class App extends Component {
               />
               <div className="row mt-15">
               {/* Conponent BookList */}
-                <BookList  books={books}
-                           onUpdateStatusBook={ this.onUpdateStatusBook } 
-                           onDeleteBook={ this.onDeleteBook}
-                           onUpdateBook={this.onUpdateBook}
-                           onHandleFilter={this.onHandleFilter}
-                           />
+                <BookList  
+                          // books={books}
+                          onUpdateStatusBook={ this.onUpdateStatusBook } 
+                          onDeleteBook={ this.onDeleteBook}
+                          onUpdateBook={this.onUpdateBook}
+                          onHandleFilter={this.onHandleFilter}
+                          />
               </div>
             </div>
           </div>

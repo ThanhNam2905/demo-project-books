@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import moment from 'moment'
+import moment from 'moment';
+import { connect } from 'react-redux';
+import * as actions from './../../actions/index'
 
-class FormAdd extends Component {
+class BookFormAdd extends Component {
 
     constructor(props) {
         super(props);
@@ -12,7 +14,7 @@ class FormAdd extends Component {
             tenTG: '',
             ngayXB: moment().format('YYYY-MM-DD'),
             trangThaiSach: 0
-        }
+        };
     }
     
     onRemoveFormAdd = () => {
@@ -22,9 +24,7 @@ class FormAdd extends Component {
     // On submit Form Add Books
     onSubmitForm = (event) => {
         event.preventDefault();
-        // console.log(this.state);
-        this.props.onSubmitForm(this.state);
-        // clear data va close Form Add Books
+        this.props.onAddBook(this.state);
         this.onClearDataForm();
         this.onRemoveFormAdd();
     }
@@ -49,16 +49,18 @@ class FormAdd extends Component {
     }
     // LifeCycle khi nhan Edit
     componentDidMount = () => {
-        // console.log("componentDidMount");
-        if(this.props.book !== null) {
+        
+        if(this.props.bookEdit && this.props.bookEdit !== null) {
             this.setState({
-                id: this.props.book.id,
-                maSach: this.props.book.maSach,
-                tenSach: this.props.book.tenSach,
-                tenTG: this.props.book.tenTG,
+                id: this.props.bookEdit.id,
+                maSach: this.props.bookEdit.maSach,
+                tenSach: this.props.bookEdit.tenSach,
+                tenTG: this.props.bookEdit.tenTG,
                 ngayXB: moment(this.props.ngayXB).format('YYYY-MM-DD'),
-                trangThaiSach: this.props.book.trangThaiSach
+                trangThaiSach: this.props.bookEdit.trangThaiSach
             })
+        } else {
+            this.onClearDataForm();
         }
     }
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -87,12 +89,11 @@ class FormAdd extends Component {
     }
     
     render() {
-        var { id } = this.state;
-
+        // console.log(this.state.ngayXB);
         return (
                 <div className="panel panel-warning">
                     <div className="panel-heading">
-                        <h3 className="panel-title">{ id !== '' ? 'Cập nhật sách' : 'Thêm Sách'}</h3>
+                        <h3 className="panel-title">{ this.state.id !== '' ? 'Cập nhật sách' : 'Thêm Sách'}</h3>
                         <span   className="fa fa-times-circle"
                                 onClick={this.onRemoveFormAdd}>
                         </span>
@@ -146,7 +147,7 @@ class FormAdd extends Component {
                             </select>
                             <br />
                             <div className="text-center">
-                                <button type="submit" className="btn btn-warning">{ id !== '' ? 'Lưu' : 'Thêm'}</button>
+                                <button type="submit" className="btn btn-warning">{ this.state.id !== '' ? 'Lưu' : 'Thêm'}</button>
                                 &nbsp;
                                 &nbsp;
                                 <button type="submit" className="btn btn-danger" onClick={this.onClearDataForm}>Hủy Bỏ</button>
@@ -158,4 +159,20 @@ class FormAdd extends Component {
     }
 }
 
-export default FormAdd;
+// Redux
+
+const mapStateToProps = (state) => {
+    return {
+
+    }
+}
+
+const mapDispatchToProps = (dispatch, props) => ({
+
+    onAddBook: (book) => {  // onAddBook la 1 dispatch da dc chuyen thanh props
+        dispatch(actions.addBook(book))
+    }
+})
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookFormAdd);
