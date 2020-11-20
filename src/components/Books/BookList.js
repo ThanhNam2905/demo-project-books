@@ -1,44 +1,97 @@
 import React, { Component } from 'react';
 import BookItem from './BookItem';
 import { connect } from 'react-redux';
+import * as actions from './../../actions/index';
+
+const STATUS_BOOK = {
+    all: -1,
+    full: 0,
+    soldout: 1
+};
 
 class BookList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = ({
+        this.state = {
             filterTenSach: '',
             filterMaSach: '',
             filterStatusSach: -1, // -1 -> all, 0 -> Full, 1 -> Sold out
-        })
+        };
         
     }
     // HandleChange Filter Input
-    onHandleChange = (event) => {
+    onHandleChange = async (event) => {
         var name = event.target.name;
-        var value = event.target.value;
-        this.props.onHandleFilter(
-            name === 'filterTenSach' ? value : this.state.filterTenSach,
-            name === 'filterMaSach' ? value : this.state.filterMaSach,
-            name === 'filterStatusSach' ? value : this.state.filterStatusSach
-        );
-        this.setState({
+        var value = event.target.type === "checkbox" ? event.target.checked : event.target.value ;
+        var filter = {
+            name: name === 'filterTenSach' ? value : this.state.filterTenSach,
+            ma : name === 'filterMaSach' ? value : this.state.filterMaSach,
+            status: name === 'filterStatusSach' ? value : this.state.filterStatusSach
+        };
+        this.props.onFilterTable(filter);
+        await this.setState({
             [name] : value
         })
     }
     
 
     render() {
-        var { books } = this.props; // cach viet cua ECMA6: var books = this.props.books
-        var { filterTenSach, filterMaSach, filterStatusSach} = this.state;
+        // Redux mapStateToProps
+        var { filterTable, books, keywordSearch, sort } = this.props;
+
+        var { filterTenSach, filterMaSach, filterStatusSach } = this.state;
+
+        // kiem tra filter co ton tai hay ko
+        if(filterTable) {
+            // Filter bằng Name
+            if(filterTable.name) {
+                books = books.filter((book) => {
+                    return book.tenSach.toLowerCase().indexOf(filterTable.name) !== -1;
+                });
+            }
+            // Filter bằng Mã sách
+            if(filterTable.ma) {
+                books = books.filter((book) => {
+                    return book.maSach.toLowerCase().indexOf(filterTable.ma) !== -1;
+                });
+            }
+            // Filter bằng Status sách
+            books = books.filter((book) => {
+                if(filterTable.status == STATUS_BOOK.all) return book;
+                else { // truong hop full or soldout
+                    return book.trangThaiSach == (parseInt(filterTable.status, 10) == STATUS_BOOK.full ? 0 : 1);
+                }
+            });
+        }
+        // Chuc nang Search 
+        if(keywordSearch) {
+            books = books.filter((book) => {
+                return book.tenSach.toLowerCase().indexOf(keywordSearch) !== -1;
+            });
+        }
+        // Chuc Nang Sap xep
+        if(sort.by === "name") {
+            // trường hợp sap xep theo tenSach
+            books.sort((a, b) => {
+              if(a.tenSach.toLowerCase() > b.tenSach.toLowerCase()) return sort.value;
+              else if(a.tenSach.toLowerCase() < b.tenSach.toLowerCase()) return -sort.value;
+              else return 0;
+            });
+        }else if(sort.by === "status") {
+            // trường hợp sap xep theo statusSach
+            books.sort((a, b) => {
+            if(a.trangThaiSach > b.trangThaiSach) return sort.value;
+            else if(a.trangThaiSach < b.trangThaiSach) return -sort.value;
+            else return 0;
+            });
+        }
+        // Get Data Book 
         var elementBook = books.map((book, index) => {
             return <BookItem    key={book.id} 
                                 index={index} 
                                 book={book}
-                                onUpdateStatusBook={this.props.onUpdateStatusBook}
-                                onDeleteBook={this.props.onDeleteBook}
-                                onUpdateBook={this.props.onUpdateBook}
-                                />
+                    />
         }) 
 
         return (
@@ -65,7 +118,6 @@ class BookList extends Component {
                                         onChange={ this.onHandleChange }
                                         />
                             </td>
-                
                             <td>
                                 <input  type="text" 
                                         className="form-control" 
@@ -96,10 +148,18 @@ class BookList extends Component {
 }
 // Redux
 const mapStateToProps = (state) => ({
-    books: state.books
+    books: state.books,
+    filterTable: state.FilterTable,
+    keywordSearch: state.SearchBook,
+    sort: state.SortBook
 })
 
-const mapDispatchToProps = {
+const mapDispatchToProps = (dispatch, props) => ({
     
-}
+    onFilterTable: (filter) => {
+        // console.log(filter);
+        dispatch(actions.filterTable(filter))
+    }
+
+})
 export default connect(mapStateToProps, mapDispatchToProps)(BookList);

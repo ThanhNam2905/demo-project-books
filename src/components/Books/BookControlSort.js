@@ -1,32 +1,19 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import * as actions from './../../actions/index';
 
 class BookControlSort extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            sort: {
-                by: '',
-                value: 0
-            }
-        }
-    }
-
     // Handle Click Sort By = name va status 
     onClickSort = async(sortBy, sortValue) => {
-        // console.log(sortBy, sortValue);
-        await this.setState({ 
-            sort: {
-               by: sortBy,                           
-               value: sortValue
-            }
-        })
-        this.props.onSortBy(this.state.sort);
+        this.props.onSortBook({
+            by: sortBy,
+            value: sortValue
+        });
     }
 
     render() {
-        var { sort } = this.state;
-
+        console.log(this.props.sort);
         return (
             <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <div className="dropdown">
@@ -39,32 +26,32 @@ class BookControlSort extends Component {
                     <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                         <li onClick= {() => this.onClickSort('name', 1)}>
                             <a  role="button" 
-                                className={ (sort.by === 'name' && sort.value === 1)
+                                className={ (this.props.sort.by === 'name' && this.props.sort.value === 1)
                                             ? "sort-selected" : ''}>
                             <span className="fa fa-sort-alpha-asc pr-5">
-                                Tên A-Z
+                                Tên Sách A-Z
                             </span>
                             </a>
                         </li>
                         <li onClick= {() => this.onClickSort('name', -1)}>
                             <a  role="button" 
-                                className={ (sort.by === 'name' && sort.value === -1)
+                                className={ (this.props.sort.by === 'name' && this.props.sort.value === -1)
                                             ? "sort-selected" : ''}>
                             <span className="fa fa-sort-alpha-desc pr-5">
-                                Tên Z-A
+                                Tên Sách Z-A
                             </span>
                             </a>
                         </li>
                         <li role="separator" className="divider" />
                             <li onClick= {() => this.onClickSort('status', 1)}>
                                 <a  role="button" 
-                                    className={(sort.by === 'status' && sort.value === 1)
+                                    className={(this.props.sort.by === 'status' && this.props.sort.value === 1)
                                                 ? "sort-selected" : ''}>Còn Hàng</a>
                             </li>
                             <li onClick= {() => this.onClickSort('status', -1)}>
                                 <a  role="button" 
-                                    className={(sort.by === 'status' && sort.value === -1)
-                                                ? "sort-selected" : ''}>Sold out</a>
+                                    className={(this.props.sort.by === 'status' && this.props.sort.value === -1)
+                                                ? "sort-selected" : ''}>Hết Hàng</a>
                             </li>
                         <li/>
                     </ul>
@@ -74,5 +61,15 @@ class BookControlSort extends Component {
         );
     }
 }
+const mapStateToProps = (state) => ({
+    sort: state.SortBook
+})
 
-export default BookControlSort;
+const mapDispatchToProps = (dispatch, props) => ({
+    onSortBook: (sort) => {
+        dispatch(actions.sortBook(sort))
+    }
+})
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookControlSort);

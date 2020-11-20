@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import * as actions from './../../actions/index';
 
 class BookControlSearch extends Component {
 
@@ -16,11 +18,11 @@ class BookControlSearch extends Component {
         });
     }
     onHandleSearch = () => {
-        this.props.onHandleSearch(this.state.keywordSearch);
+        this.props.onSearchBook(this.state.keywordSearch);
     }
 
     render() {
-        var { keywordSearch } = this.state;
+
         return (
             <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <div className="input-group">
@@ -28,7 +30,7 @@ class BookControlSearch extends Component {
                         className="form-control" 
                         placeholder="Nhập từ khóa..." 
                         name="keywordSearch"
-                        value={ keywordSearch }
+                        value={ this.state.keywordSearch }
                         onChange={ this.onChangeKeySearch}
                         />
                 <span className="input-group-btn">
@@ -44,4 +46,12 @@ class BookControlSearch extends Component {
     }
 }
 
-export default BookControlSearch;
+const mapDispatchToProps = (dispatch, props) => ({
+
+    onSearchBook: (keyword) => {
+        // console.log(keyword);
+        dispatch(actions.searchBook(keyword))
+    }
+})
+
+export default connect(null, mapDispatchToProps)(BookControlSearch);

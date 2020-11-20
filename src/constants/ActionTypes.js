@@ -1,2 +1,11 @@
 export const GETLIST_ALL = 'GETLIST_ALL';
-export const ADD_BOOK = 'ADD_BOOK';
+export const SAVE_BOOK = 'SAVE_BOOK';
+export const OPEN_FORM_BOOK = 'OPEN_FORM_BOOK';
+export const CLOSE_FORM_BOOK = 'CLOSE_FORM_BOOK';
+export const TOGGLE_FORM_BOOK = 'TOGGLE_FORM_BOOK';
+export const UPDATE_STATUS_BOOK = 'UPDATE_STATUS_BOOK';
+export const DELETE_BOOK_ITEM = 'DELETE_BOOK_ITEM';
+export const UPDATE_BOOK_ITEM = 'UPDATE_BOOK_ITEM';
+export const FILTER_TABLE = 'FILTER_TABLE';
+export const SEARCH_BOOK = 'SEARCH_BOOK';
+export const SORT_BOOK = 'SORT_BOOK';

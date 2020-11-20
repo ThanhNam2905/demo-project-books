@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import * as actions from './../../actions/index'
+import * as actions from './../../actions/index';
+
+const STATUS_BOOK = {
+    full : 0,
+    soldout: 1
+};
 
 class BookFormAdd extends Component {
 
@@ -13,20 +18,16 @@ class BookFormAdd extends Component {
             tenSach: '',
             tenTG: '',
             ngayXB: moment().format('YYYY-MM-DD'),
-            trangThaiSach: 0
+            trangThaiSach: STATUS_BOOK.full
         };
     }
-    
-    onRemoveFormAdd = () => {
-        this.props.onRemoveFormAdd();
-    }
 
-    // On submit Form Add Books
+    // On submit Form Add and Edit Books
     onSubmitForm = (event) => {
         event.preventDefault();
-        this.props.onAddBook(this.state);
+        this.props.onSaveBook(this.state);
         this.onClearDataForm();
-        this.onRemoveFormAdd();
+        this.props.onCloseForm();
     }
     // handleChangeFormAdd
     handleChangeFormAdd = (event) => {
@@ -39,63 +40,60 @@ class BookFormAdd extends Component {
     }
     // OnClick btn Huy Bo thi remove Data vua nhap
     onClearDataForm = () => {
+        
         this.setState({
             maSach: '',
             tenSach: '',
             tenTG: '',
-            ngayXB: '',
-            trangThaiSach: 0
-        })
+            ngayXB: moment().format('YYYY-MM-DD'),
+            trangThaiSach: STATUS_BOOK.full
+        });
+        
     }
     // LifeCycle khi nhan Edit
     componentDidMount = () => {
-        
-        if(this.props.bookEdit && this.props.bookEdit !== null) {
+
+        if(this.props.bookItemEdit && this.props.bookItemEdit.id !== null) {
             this.setState({
-                id: this.props.bookEdit.id,
-                maSach: this.props.bookEdit.maSach,
-                tenSach: this.props.bookEdit.tenSach,
-                tenTG: this.props.bookEdit.tenTG,
-                ngayXB: moment(this.props.ngayXB).format('YYYY-MM-DD'),
-                trangThaiSach: this.props.bookEdit.trangThaiSach
+                id: this.props.bookItemEdit.id,
+                maSach: this.props.bookItemEdit.maSach,
+                tenSach: this.props.bookItemEdit.tenSach,
+                tenTG: this.props.bookItemEdit.tenTG,
+                ngayXB: moment(this.props.bookItemEdit.ngayXB).format('YYYY-MM-DD'),
+                trangThaiSach: this.props.bookItemEdit.trangThaiSach === STATUS_BOOK.full ? 0 : 1
             })
         } else {
             this.onClearDataForm();
         }
     }
     UNSAFE_componentWillReceiveProps(nextProps) {
-        // console.log(nextProps);
-        if(nextProps !== null && nextProps.book !== null) {
+        if(nextProps && nextProps.bookItemEdit !== null) {
             this.setState({
-                id: nextProps.book.id,
-                maSach: nextProps.book.maSach,
-                tenSach: nextProps.book.tenSach,
-                tenTG: nextProps.book.tenTG,
-                ngayXB: moment(this.props.ngayXB).format('YYYY-MM-DD'),
-                trangThaiSach: nextProps.book.trangThaiSach
+                id: nextProps.bookItemEdit.id,
+                maSach: nextProps.bookItemEdit.maSach,
+                tenSach: nextProps.bookItemEdit.tenSach,
+                tenTG: nextProps.bookItemEdit.tenTG,
+                ngayXB: moment(nextProps.bookItemEdit.ngayXB).format('YYYY-MM-DD'),
+                trangThaiSach: nextProps.bookItemEdit.trangThaiSach === STATUS_BOOK.full ? 0 : 1
             })
         }
         // truong hop Edit -> Add
         else if(nextProps && !nextProps.book) {
-            this.setState({
-                id: '',
-                maSach: '',
-                tenSach: '',
-                tenTG: '',
-                ngayXB: moment().format('YYYY-MM-DD'),
-                trangThaiSach: 0
-            })
+            this.onClearDataForm();
         }
     }
     
     render() {
-        // console.log(this.state.ngayXB);
+        // Redux mapStateToProps convert state trong store => props
+        var { onCloseForm, isDisplayFormAdd } = this.props; 
+    
+        if(!isDisplayFormAdd) return null ;
         return (
                 <div className="panel panel-warning">
                     <div className="panel-heading">
-                        <h3 className="panel-title">{ this.state.id !== '' ? 'Cập nhật sách' : 'Thêm Sách'}</h3>
+                        <h3 className="panel-title">{ !this.state.id ? 'Thêm sách' : 'Cập nhật Sách'}</h3>
                         <span   className="fa fa-times-circle"
-                                onClick={this.onRemoveFormAdd}>
+                                onClick={ onCloseForm }>
                         </span>
                     </div>
                     <div className="panel-body">
@@ -163,15 +161,19 @@ class BookFormAdd extends Component {
 
 const mapStateToProps = (state) => {
     return {
-
+        isDisplayFormAdd: state.isDisplayForm,
+        bookItemEdit: state.UpdateBookItem
     }
 }
 
 const mapDispatchToProps = (dispatch, props) => ({
 
-    onAddBook: (book) => {  // onAddBook la 1 dispatch da dc chuyen thanh props
-        dispatch(actions.addBook(book))
-    }
+    onSaveBook: (book) => {  // onSaveBook la 1 dispatch da dc chuyen thanh props
+        dispatch(actions.saveBook(book))
+    },
+    onCloseForm: () => {
+        dispatch(actions.closeForm());
+    },
 })
 
 

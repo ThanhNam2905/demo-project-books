@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-const moment = require('moment');
+import moment from 'moment';
+import * as actions from './../../actions/index';
+import {connect} from 'react-redux'
+
 const STATUS = {
    full :   0,
    soldout: 1
@@ -7,16 +10,19 @@ const STATUS = {
 class BookItem extends Component {
     
     onUpdateStatusBook = () => {
-        // console.log(this.props.book.id);
         this.props.onUpdateStatusBook(this.props.book.id);
     }
     // Chuc nang Delete Book
     onDeleteBook = () => {
-        this.props.onDeleteBook(this.props.book.id);
+        // Redux mapDispatchToProps
+        // convert dispatch { onDeleteBookItem, onCloseForm }  => props
+        this.props.onDeleteBookItem(this.props.book.id);
+        this.props.onCloseForm();
     }
     // Chuc nang Update Book
     onUpdateBook = () => {
-        this.props.onUpdateBook(this.props.book.id);
+        this.props.onUpdateBookItem(this.props.book);
+        this.props.onOpenForm();
     }
 
     render() {
@@ -31,7 +37,7 @@ class BookItem extends Component {
                 <td className="text-center">
                     <span   className={book.trangThaiSach == STATUS.full ? "label label-success" : "label label-danger"}
                             onClick={this.onUpdateStatusBook}>
-                            { book.trangThaiSach == STATUS.full   ? "Full" : "Sold out" }
+                            { book.trangThaiSach == STATUS.full ? "Full" : "Sold out" }
                     </span>
                 </td>
                 <td className="text-center">
@@ -52,4 +58,27 @@ class BookItem extends Component {
     }
 }
 
-export default BookItem;
+const mapStateToProps = (state) => ({
+    
+})
+
+const mapDispatchToProps = (dispatch, props) => ({
+
+    onUpdateStatusBook: (id) => { 
+        dispatch(actions.updateStatusBook(id))
+    },
+    onDeleteBookItem: (id) => {
+        dispatch(actions.deleteBookItem(id));
+    },
+    onCloseForm: () => {
+        dispatch(actions.closeForm());
+    },
+    onOpenForm: () => {
+        dispatch(actions.openForm());
+    },
+    onUpdateBookItem: (book) => {
+        dispatch(actions.updateBookItem(book));
+    }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookItem);

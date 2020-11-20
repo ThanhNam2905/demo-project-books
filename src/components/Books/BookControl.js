@@ -7,9 +7,9 @@ class BookControl extends Component {
         return (
             <div className="row mt-15">
                 {/* Conponent Search */}
-                <BookControlSearch onHandleSearch={this.props.onHandleSearch}/>
+                <BookControlSearch/>
                 {/* Conponent Sort */}
-                <BookControlSort onSortBy={this.props.onSortBy}/>
+                <BookControlSort/>
               </div>
         );
     }
