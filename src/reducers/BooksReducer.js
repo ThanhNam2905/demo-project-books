@@ -32,14 +32,13 @@ const BookReducer = (state = initialState, action) => {
             return state;
 
         case types.SAVE_BOOK:
-            // console.log(action);
             var book = {
                 id: action.book.id,
                 maSach: action.book.maSach,
                 tenSach: action.book.tenSach,
                 tenTG: action.book.tenTG,
                 ngayXB: moment(action.book.ngayXB).format('YYYY-MM-DD'),
-                trangThaiSach: action.book.trangThaiSach 
+                trangThaiSach: action.book.trangThaiSach == STATUS_BOOK.full ? 0 : 1
             };
             if(!book.id) { // trường hợp id ='' (id === null) là Add Book
                 book.id = uuidv4();

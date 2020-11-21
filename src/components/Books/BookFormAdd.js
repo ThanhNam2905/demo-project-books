@@ -22,37 +22,8 @@ class BookFormAdd extends Component {
         };
     }
 
-    // On submit Form Add and Edit Books
-    onSubmitForm = (event) => {
-        event.preventDefault();
-        this.props.onSaveBook(this.state);
-        this.onClearDataForm();
-        this.props.onCloseForm();
-    }
-    // handleChangeFormAdd
-    handleChangeFormAdd = (event) => {
-        var name = event.target.name;
-        var value = event.target.value;
-        this.setState({
-            [name]: value
-        })
-        
-    }
-    // OnClick btn Huy Bo thi remove Data vua nhap
-    onClearDataForm = () => {
-        
-        this.setState({
-            maSach: '',
-            tenSach: '',
-            tenTG: '',
-            ngayXB: moment().format('YYYY-MM-DD'),
-            trangThaiSach: STATUS_BOOK.full
-        });
-        
-    }
     // LifeCycle khi nhan Edit
     componentDidMount = () => {
-
         if(this.props.bookItemEdit && this.props.bookItemEdit.id !== null) {
             this.setState({
                 id: this.props.bookItemEdit.id,
@@ -81,12 +52,41 @@ class BookFormAdd extends Component {
         else if(nextProps && !nextProps.book) {
             this.onClearDataForm();
         }
+    }   
+    // On submit Form Add and Edit Books
+    onSubmitForm = (event) => {
+        event.preventDefault();
+        this.props.onSaveBook(this.state);
+        this.onClearDataForm();
+        this.props.onCloseForm();
+    }
+    // handleChangeFormAdd
+    handleChangeFormAdd = (event) => {
+        var name = event.target.name;
+        var value = event.target.value;
+        this.setState({
+            [name]: value
+        })
+    }
+    // OnClick btn Huy Bo thi remove Data vua nhap
+    onClearDataForm = () => { 
+        this.setState({
+            maSach: '',
+            tenSach: '',
+            tenTG: '',
+            ngayXB: moment().format('YYYY-MM-DD'),
+            trangThaiSach: STATUS_BOOK.full
+        });
+        
+    }
+    // Close Form
+    onCloseForm = () => {
+        this.props.onCloseForm();
     }
     
     render() {
         // Redux mapStateToProps convert state trong store => props
         var { onCloseForm, isDisplayFormAdd } = this.props; 
-    
         if(!isDisplayFormAdd) return null ;
         return (
                 <div className="panel panel-warning">
@@ -148,7 +148,7 @@ class BookFormAdd extends Component {
                                 <button type="submit" className="btn btn-warning">{ this.state.id !== '' ? 'Lưu' : 'Thêm'}</button>
                                 &nbsp;
                                 &nbsp;
-                                <button type="submit" className="btn btn-danger" onClick={this.onClearDataForm}>Hủy Bỏ</button>
+                                <button type="submit" className="btn btn-danger" onClick={this.onCloseForm}>Hủy Bỏ</button>
                             </div>
                         </form>
                     </div>
@@ -158,7 +158,6 @@ class BookFormAdd extends Component {
 }
 
 // Redux
-
 const mapStateToProps = (state) => {
     return {
         isDisplayFormAdd: state.isDisplayForm,

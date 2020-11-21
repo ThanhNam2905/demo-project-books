@@ -15,7 +15,6 @@ class BookItem extends Component {
     // Chuc nang Delete Book
     onDeleteBook = () => {
         // Redux mapDispatchToProps
-        // convert dispatch { onDeleteBookItem, onCloseForm }  => props
         this.props.onDeleteBookItem(this.props.book.id);
         this.props.onCloseForm();
     }
@@ -35,9 +34,11 @@ class BookItem extends Component {
                 <td>{book.maSach}</td>
                 <td>{moment(book.ngayXB).format('DD/MM/YYYY')}</td>
                 <td className="text-center">
-                    <span   className={book.trangThaiSach == STATUS.full ? "label label-success" : "label label-danger"}
+                    <span   className={ book.trangThaiSach === STATUS.full ||
+                                        book.trangThaiSach === toString(STATUS.full) ? "label label-success" : "label label-danger"}
                             onClick={this.onUpdateStatusBook}>
-                            { book.trangThaiSach == STATUS.full ? "Full" : "Sold out" }
+                            {   book.trangThaiSach === STATUS.full || 
+                                book.trangThaiSach === toString(STATUS.full) ? "Full" : "Sold out" }
                     </span>
                 </td>
                 <td className="text-center">
@@ -58,10 +59,6 @@ class BookItem extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    
-})
-
 const mapDispatchToProps = (dispatch, props) => ({
 
     onUpdateStatusBook: (id) => { 
@@ -81,4 +78,4 @@ const mapDispatchToProps = (dispatch, props) => ({
     }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(BookItem);
+export default connect(null, mapDispatchToProps)(BookItem);
